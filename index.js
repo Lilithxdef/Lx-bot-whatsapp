@@ -50,22 +50,34 @@ async function startSock() {
   })
 
   sock.ev.on('messages.upsert', async ({ messages }) => {
-    const msg = messages[0]
-    if (!msg.message || msg.key.remoteJid === 'status@broadcast') return
+  const msg = messages[0]
+  if (!msg.message || !msg.key || !msg.key.remoteJid) return
 
-    const from = msg.key.remoteJid
-    const isGroup = from.endsWith('@g.us')
-    const type = Object.keys(msg.message)[0]
-    const body = msg.message.conversation || msg.message[type]?.text || msg.message[type]?.caption || msg.message[type]?.message?.conversation || ''
-    const isCmd = body.startsWith('.')
-    const command = isCmd ? body.trim().split(/ +/).shift().toLowerCase() : ''
-    const args = body.trim().split(/ +/).slice(1)
+  const from = msg.key.remoteJid
 
-    // Log pesan
-    console.log(`📩 ${isGroup ? 'Group' : 'Private'} from ${from}: ${body}`)
+  // ⛔ Abaikan pesan dari selain user atau grup
+  if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
+    console.log('⛔ Diblokir: Pesan dari non-user atau channel:', from)
+    return
+  }
 
-    // Auto Response
-    await handleAutoResponse(sock, msg, from, isCmd)
+  const isGroup = from.endsWith('@g.us')
+  const type = Object.keys(msg.message)[0]
+  const body =
+    msg.message.conversation ||
+    msg.message[type]?.text ||
+    msg.message[type]?.caption ||
+    msg.message[type]?.message?.conversation ||
+    ''
+  const isCmd = body.startsWith('.')
+  const command = isCmd ? body.trim().split(/ +/).shift().toLowerCase() : ''
+  const args = body.trim().split(/ +/).slice(1)
+
+  // Log pesan
+  console.log(`📩 ${isGroup ? 'Group' : 'Private'} from ${from}: ${body}`)
+
+  // Auto Response
+  await handleAutoResponse(sock, msg, from, isCmd)
 
     // Handler command
     if (isCmd) {
