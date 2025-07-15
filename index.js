@@ -19,6 +19,7 @@ const ytmp3 = require('./lib/ytmp3')
 const sticker = require('./lib/sticker')
 const toimg = require('./lib/toimg')
 const ai = require('./lib/ai')
+const bratifyMedia = require('./lib/brat')
 const tiktokdl = require('./lib/tiktokdl')
 
 async function startSock() {
@@ -109,7 +110,9 @@ async function startSock() {
         const d = Math.floor(h / 24)
         const format = `${d}d ${pad(h % 24)}h ${pad(m)}m`
         await sock.sendMessage(from, { text: `⏱ Runtime: ${format}` }, { quoted: msg })
-      } else if (command === '.sc') {
+} else if (command === '.brat') {
+  await bratifyMedia(sock, msg, args.join(' '))
+} else if (command === '.sc') {
         await sock.sendMessage(from, {
           text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
         }, { quoted: msg })
