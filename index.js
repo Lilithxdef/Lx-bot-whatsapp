@@ -11,6 +11,8 @@ const qrcode = require('qrcode-terminal')
 const fetch = require('node-fetch')
 
 // Import fitur
+const execShell = require('./lib/exec')
+const antiView = require('./lib/antiview')
 const owner = require('./lib/owner')
 const handleAutoResponse = require('./lib/autoresponse')
 const menu = require('./lib/menu')
@@ -103,15 +105,41 @@ async function startSock() {
         const latency = now - msg.messageTimestamp * 1000
         await sock.sendMessage(from, { text: `🏓 *Pong!*\n📶 Respon: *${latency} ms*` }, { quoted: msg })
       } else if (command === '.runtime') {
-        const uptime = process.uptime()
-        const pad = (s) => s.toString().padStart(2, '0')
-        const h = Math.floor(uptime / 3600)
-        const m = Math.floor((uptime % 3600) / 60)
-        const d = Math.floor(h / 24)
-        const format = `${d}d ${pad(h % 24)}h ${pad(m)}m`
-        await sock.sendMessage(from, { text: `⏱ Runtime: ${format}` }, { quoted: msg })
+  const os = require('os')
+
+  // Runtime
+  const uptime = process.uptime()
+  const pad = (s) => s.toString().padStart(2, '0')
+  const h = Math.floor(uptime / 3600)
+  const m = Math.floor((uptime % 3600) / 60)
+  const d = Math.floor(h / 24)
+  const runtime = `${d}d ${pad(h % 24)}h ${pad(m)}m`
+
+  // RAM
+  const totalMem = (os.totalmem() / 1024 / 1024).toFixed(0)
+  const freeMem = (os.freemem() / 1024 / 1024).toFixed(0)
+  const usedMem = totalMem - freeMem
+
+  // Device info
+  const platform = os.platform()      // contoh: linux, android
+  const arch = os.arch()              // contoh: arm64
+  const nodev = process.version       // Node.js version
+
+  // Format message
+  const info = `
+⏱ *Runtime:* ${runtime}
+📱 *Device:* ${platform} ${arch}
+🧠 *RAM:* ${usedMem} MB / ${totalMem} MB
+🧩 *Node.js:* ${nodev}\n\n di jalankan oleh: *lilith*
+`.trim()
+
+  await sock.sendMessage(from, { text: info }, { quoted: msg })
 } else if (command === '.brat') {
   await bratifyMedia(sock, msg, args.join(' '))
+} else if (command === '.q') {
+  await antiView(sock, msg)
+} else if (command === '.exec') {
+  execShell(sock, msg, text, isOwner)
 } else if (command === '.sc') {
         await sock.sendMessage(from, {
           text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
