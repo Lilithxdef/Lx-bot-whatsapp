@@ -23,37 +23,28 @@ Dirancang untuk penggunaan pribadi maupun publik, dengan fitur ringan tanpa API 
 
 ---
 
-## ✨ Fitur Utama
+## ✨ menu 
 
-### 🔧 Main
 - `.menu` — Tampilkan daftar fitur
 - `.owner` — Info kontak owner bot
 - `.ping` — Cek respon bot
 - `.runtime` — Lama bot berjalan
 - `.sc` — Lihat source code bot
-- `.ban` / `.unban` — Ban user dari penggunaan bot (khusus owner)
-
-### 🎵 Download Menu
 - `.play <judul/link>` — Download MP3 dari YouTube (yt-search + yt-dlp)
-- `.ytmp3 <link>` — ✅ Sudah fix
+- `.ytmp3 <link>` 
+- `.ytmp4  <link>`  
 - `.tiktokdl <link>` — Download video TikTok no watermark
-
-### 🎧 Music Tools
 - `.brat` — ✅ Fitur eksperimen (aktif & jalan)
-
-### 🎨 Sticker Menu
 - `.sticker` — Ubah media jadi stiker
 - `.toimg` — Ubah stiker jadi foto (jika support)
-
-### 👥 Fitur Grup (GC)
 - `.welcome` — Sambutan otomatis saat member join
 - `.tagall` — Mention semua member (admin only)
 - `.hidetag` — Kirim pesan tersembunyi tag semua (admin only)
-- `.kick @user` — Keluarkan user dari grup (admin only)
-
 ---
 
 ## ⚙️ Instalasi (Termux / Linux)
+
+`download termux in f-droid`
 
 ### 🔧 Persyaratan
 - Node.js v18+
@@ -65,9 +56,12 @@ Dirancang untuk penggunaan pribadi maupun publik, dengan fitur ringan tanpa API 
 ### 🧪 Perintah Instalasi
 ```bash
 pkg update && pkg upgrade
-pkg install nodejs git ffmpeg imagemagick
-git clone https://github.com/lilithxdef/Lx-bot
-cd Lx-bot
+pkg install nodejs 
+pkg install ffmpeg 
+pkg install imagemagick
+pkg install git
+git clone https://github.com/lilithxdef/Lx-bot-whatsapp
+cd Lx-bot-whatsapp
 npm install
 node index.js
 

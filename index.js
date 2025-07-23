@@ -11,12 +11,14 @@ const qrcode = require('qrcode-terminal')
 const fetch = require('node-fetch')
 
 // Import fitur
+const googleImg = require('./lib/img')
 const execShell = require('./lib/exec')
 const antiView = require('./lib/antiview')
 const owner = require('./lib/owner')
 const handleAutoResponse = require('./lib/autoresponse')
 const menu = require('./lib/menu')
 const play = require('./lib/play')
+const ytmp4 = require('./lib/ytmp4')
 const ytmp3 = require('./lib/ytmp3')
 const sticker = require('./lib/sticker')
 const toimg = require('./lib/toimg')
@@ -124,6 +126,9 @@ ${menuText}
   await hidetag(sock, msg,args)
 } else if (command === '.tagall') {
   await tagAll(sock, msg, args)
+} else if (command === '.ytmp4') {
+  if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link YouTube!' }, { quoted: msg })
+  await ytmp4(sock, msg, args[0])
 } else if (command === '.ytmp3') {
   if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link YouTube!' }, { quoted: msg })
   await ytmp3(sock, msg, args[0])
@@ -144,7 +149,7 @@ ${menuText}
 } else if (command === '.tagall') {
   await tagAll(sock, msg, from, sender, groupMetadata, args)
 } else if (command === '.img') {
-  await googleImg(sock, msg)
+  await googleImg(sock, msg, q)
 } else if (command === '.toimg') {
   await toimg(sock, msg)
 } else if (command === '.ytsearch') {
