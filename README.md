@@ -18,59 +18,58 @@
 
 ## 🚀 Tentang
 
-**Lx-Bot** adalah WhatsApp bot open-source yang dibuat dengan Node.js dan Baileys.  
+**Lx-Bot** adalah WhatsApp bot open-source berbasis Node.js + Baileys.  
 Dirancang untuk penggunaan pribadi maupun publik, dengan fitur ringan tanpa API premium.
 
 ---
 
 ## ✨ Fitur Utama
 
-#### Main
-- `.menu` — Tampilkan daftar fitur bot
-- `.owner` — Info pemilik bot (LilithXdef)
+### 🔧 Main
+- `.menu` — Tampilkan daftar fitur
+- `.owner` — Info kontak owner bot
+- `.ping` — Cek respon bot
+- `.runtime` — Lama bot berjalan
+- `.sc` — Lihat source code bot
+- `.ban` / `.unban` — Ban user dari penggunaan bot (khusus owner)
 
-#### Download Menu
-- `.play <judul/link>` — Download MP3 dari YouTube (via yt-search & yt-dlp)
-- `.ytmp3 <link>` — ❌ Belum fix / nonaktif
+### 🎵 Download Menu
+- `.play <judul/link>` — Download MP3 dari YouTube (yt-search + yt-dlp)
+- `.ytmp3 <link>` — ✅ Sudah fix
+- `.tiktokdl <link>` — Download video TikTok no watermark
 
-#### Music Tools
-- `.spotify <link>` — ❌ Ambil data Spotify (masih pengembangan)
-- `.brat` — ❌ Eksperimen (belum jalan)
+### 🎧 Music Tools
+- `.brat` — ✅ Fitur eksperimen (aktif & jalan)
 
-#### Sticker Menu
+### 🎨 Sticker Menu
 - `.sticker` — Ubah media jadi stiker
-- `.qc <teks>` — ❌ Quote Chat seperti chat WA
+- `.toimg` — Ubah stiker jadi foto (jika support)
 
-#### Utilities
-- `.ping` — ❌ Cek respon bot
-- `.sc` — Tampilkan source code GitHub
-- `.runtime` — Tampilkan waktu aktif bot
+### 👥 Fitur Grup (GC)
+- `.welcome` — Sambutan otomatis saat member join
+- `.tagall` — Mention semua member (admin only)
+- `.hidetag` — Kirim pesan tersembunyi tag semua (admin only)
+- `.kick @user` — Keluarkan user dari grup (admin only)
 
 ---
 
 ## ⚙️ Instalasi (Termux / Linux)
 
-### 🔧 Persyaratan:
+### 🔧 Persyaratan
 - Node.js v18+
 - Git
 - FFmpeg
 - ImageMagick (opsional)
-- WhatsApp aktif (untuk scan QR)
+- WhatsApp aktif untuk login QR
 
-### 🧪 Perintah Instalasi:
+### 🧪 Perintah Instalasi
 ```bash
 pkg update && pkg upgrade
-pkg install nodejs
-pkg install git
-pkg install ffmpeg
-pkg install imagemagick
+pkg install nodejs git ffmpeg imagemagick
 git clone https://github.com/lilithxdef/Lx-bot
 cd Lx-bot
 npm install
-
-# Jalankan bot
 node index.js
-
 
 ---
 
