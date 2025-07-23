@@ -23,6 +23,9 @@ const toimg = require('./lib/toimg')
 const ai = require('./lib/ai')
 const bratifyMedia = require('./lib/brat')
 const tiktokdl = require('./lib/tiktokdl')
+const tagAll = require('./lib/tagall')
+const { handleWelcomeCommand, handleWelcomeEvent } = require('./lib/welcome')
+//const groupCmd = require('./lib/group')
 
 async function startSock() {
   const { state, saveCreds } = await useMultiFileAuthState('./session')
@@ -50,36 +53,41 @@ async function startSock() {
     } else if (connection === 'open') {
       console.log('✅ Bot siap! Terhubung sebagai:', sock.user.id)
     }
-  })
 
-  sock.ev.on('messages.upsert', async ({ messages }) => {
+  })
+sock.ev.on('messages.upsert', async ({ messages }) => {
   const msg = messages[0]
   if (!msg.message || !msg.key || !msg.key.remoteJid) return
 
   const from = msg.key.remoteJid
-
-  if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
-    console.log('⛔ Diblokir: Pesan dari non-user atau channel:', from)
-    return
-  }
-
+  const sender = msg.key.participant || msg.key.remoteJid
   const isGroup = from.endsWith('@g.us')
+  const groupMetadata = isGroup ? await sock.groupMetadata(from) : null
+
   const type = Object.keys(msg.message)[0]
   const body =
     msg.message.conversation ||
+    msg.message.extendedTextMessage?.text ||
     msg.message[type]?.text ||
     msg.message[type]?.caption ||
     msg.message[type]?.message?.conversation ||
     ''
+
   const isCmd = body.startsWith('.')
-  const command = isCmd ? body.trim().split(/ +/).shift().toLowerCase() : ''
+  const command = isCmd ? body.trim().split(/ +/)[0].toLowerCase() : ''
   const args = body.trim().split(/ +/).slice(1)
+  const q = args.join(' ')
 
-  console.log(`📩 ${isGroup ? 'Group' : 'Private'} from ${from}: ${body}`)
+console.log(`📩 ${isGroup ? 'Group' : 'Private'} from ${from}: ${body}`)
 
-  // Auto Response
-  await handleAutoResponse(sock, msg, from, isCmd)
+// Hindari channel/saluran
+if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
+  console.log('⛔ Auto-respon diblokir (bukan user/grup):', from)
+  return
+}
 
+// Auto Response hanya untuk pesan biasa (non-command)
+if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
     // Handler command
     if (isCmd) {
 if (command === '.menu') {
@@ -119,6 +127,8 @@ ${menuText}
 } else if (command === '.ytmp3') {
   if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link YouTube!' }, { quoted: msg })
   await ytmp3(sock, msg, args[0])
+} else if (command === '.welcome') {
+  await handleWelcomeCommand(sock, msg, from, command, args, isGroup, sender, groupMetadata)
 } else if (command === '.tiktokdl') {
   if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link TikTok!' }, { quoted: msg })
   await tiktokdl(sock, msg, args[0])
@@ -131,6 +141,8 @@ ${menuText}
   const now = new Date().getTime()
   const latency = now - msg.messageTimestamp * 1000
   await sock.sendMessage(from, { text: `🏓 *Pong!*\n📶 Respon: *${latency} ms*` }, { quoted: msg })
+} else if (command === '.tagall') {
+  await tagAll(sock, msg, from, sender, groupMetadata, args)
 } else if (command === '.img') {
   await googleImg(sock, msg)
 } else if (command === '.toimg') {
@@ -183,9 +195,10 @@ ${menuText}
         await sock.sendMessage(from, {
           text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
         }, { quoted: msg })
-      } else if (command === '.owner') {
-        await owner(sock, msg)
-      }
+} else if (command === '.owner') {
+  await owner(sock, msg)
+
+    }
     }
   })
 }
