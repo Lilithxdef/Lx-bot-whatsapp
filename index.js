@@ -82,28 +82,7 @@ async function startSock() {
 
     // Handler command
     if (isCmd) {
-      if (command === '.menu') {
-        await sock.sendMessage(from, { text: menu() }, { quoted: msg })
-      } else if (command === '.play') {
-        if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan judul atau link YouTube.' }, { quoted: msg })
-        await play(sock, msg, args.join(' '))
-      } else if (command === '.ytmp3') {
-        if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link YouTube!' }, { quoted: msg })
-        await ytmp3(sock, msg, args[0])
-      } else if (command === '.tiktokdl') {
-        if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link TikTok!' }, { quoted: msg })
-        await tiktokdl(sock, msg, args[0])
-      } else if (command === '.sticker') {
-        await sticker(sock, msg)
-      } else if (command === '.ai') {
-        if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan pertanyaan!' }, { quoted: msg })
-        await ai(sock, msg, args.join(' '))
-      } else if (command === '.ping') {
-        const now = new Date().getTime()
-        const latency = now - msg.messageTimestamp * 1000
-        await sock.sendMessage(from, { text: `🏓 *Pong!*\n📶 Respon: *${latency} ms*` }, { quoted: msg })
-      } else if (command === '.runtime') {
-   if (command === '.menu') {
+if (command === '.menu') {
   const from = msg.key.remoteJid
   const sender = msg.key.fromMe ? sock.user.id : (msg.key.participant || msg.key.remoteJid)
   const senderName = msg.pushName || 'Kak'
@@ -212,4 +191,3 @@ ${menuText}
 }
 
 startSock()
-
