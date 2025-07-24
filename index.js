@@ -10,12 +10,12 @@ const fs = require('fs')
 const qrcode = require('qrcode-terminal')
 const fetch = require('node-fetch')
 
-// Import fitur
 const googleImg = require('./lib/img')
 const antiView = require('./lib/antiview')
 const owner = require('./lib/owner')
 const handleAutoResponse = require('./lib/autoresponse')
 const menu = require('./lib/menu')
+const { instaYTDLP } = require('./lib/instagram')
 const play = require('./lib/play')
 const ytmp4 = require('./lib/ytmp4')
 const ytmp3 = require('./lib/ytmp3')
@@ -24,6 +24,9 @@ const toimg = require('./lib/toimg')
 const bratifyMedia = require('./lib/brat')
 const tiktokdl = require('./lib/tiktokdl')
 const tagAll = require('./lib/tagall')
+const groupCommand = require('./lib/group')
+const joinGroup = require('./lib/group/join')
+const leaveGroup = require('./lib/group/leave')
 const { handleWelcomeCommand, handleWelcomeEvent } = require('./lib/welcome')
 
 async function startSock() {
@@ -80,7 +83,6 @@ sock.ev.on('messages.upsert', async ({ messages }) => {
 
 console.log(`📩 ${isGroup ? 'Group' : 'Private'} from ${from}: ${body}`)
 
-// Hindari channel/saluran
 if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
   console.log('⛔ Auto-respon diblokir (bukan user/grup):', from)
   return
@@ -88,7 +90,7 @@ if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
 
 // Auto Response hanya untuk pesan biasa (non-command)
 if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
-    // Handler command
+
     if (isCmd) {
 if (command === '.menu') {
   const from = msg.key.remoteJid
@@ -130,6 +132,8 @@ ${menuText}
   await ytmp3(sock, msg, args[0])
 } else if (command === '.welcome') {
   await handleWelcomeCommand(sock, msg, from, command, args, isGroup, sender, groupMetadata)
+} else if (['.kick', '.add', '.promote', '.demote'].includes(command)) {
+  await groupCommand(sock, msg, command, args)
 } else if (command === '.tiktokdl') {
   if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan link TikTok!' }, { quoted: msg })
   await tiktokdl(sock, msg, args[0])
@@ -139,38 +143,35 @@ ${menuText}
   const now = new Date().getTime()
   const latency = now - msg.messageTimestamp * 1000
   await sock.sendMessage(from, { text: `🏓 *Pong!*\n📶 Respon: *${latency} ms*` }, { quoted: msg })
+} else if (command === '.insta') {
+  await require('./lib/instagram')(sock, msg, args)
 } else if (command === '.tagall') {
   await tagAll(sock, msg, from, sender, groupMetadata, args)
 } else if (command === '.img') {
   await googleImg(sock, msg, q)
+} else if (command === '.Rk') {
+  await joinGroup(sock, msg, args)
+} else if (command === '.leave') {
+  await leaveGroup(sock, msg)
 } else if (command === '.toimg') {
   await toimg(sock, msg)
 } else if (command === '.brat') {
   await bratifyMedia(sock, msg, args.join(' '))
-} else if (command === '.ban' || command === '.unban') {
-  return await banUser(sock, msg, sender, from, command, ownerNumber)
 } else if (command === '.runtime') {
   const os = require('os')
-
-  // Runtime
   const uptime = process.uptime()
   const pad = (s) => s.toString().padStart(2, '0')
   const h = Math.floor(uptime / 3600)
   const m = Math.floor((uptime % 3600) / 60)
   const d = Math.floor(h / 24)
   const runtime = `${d}d ${pad(h % 24)}h ${pad(m)}m`
-
-  // RAM
   const totalMem = (os.totalmem() / 1024 / 1024).toFixed(0)
   const freeMem = (os.freemem() / 1024 / 1024).toFixed(0)
   const usedMem = totalMem - freeMem
+  const platform = os.platform()
+  const arch = os.arch()
+  const nodev = process.version
 
-  // Device info
-  const platform = os.platform()      // contoh: linux, android
-  const arch = os.arch()              // contoh: arm64
-  const nodev = process.version       // Node.js version
-
-  // Format message
   const info = `
 ⏱ *Runtime:* ${runtime}
 📱 *Device:* ${platform} ${arch}

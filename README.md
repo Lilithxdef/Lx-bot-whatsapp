@@ -23,23 +23,68 @@ Dirancang untuk penggunaan pribadi maupun publik, dengan fitur ringan tanpa API 
 
 ---
 
-## ✨ menu 
+✨ Fitur Lx-bot WhatsApp
 
-- `.menu` — Tampilkan daftar fitur
-- `.owner` — Info kontak owner bot
-- `.ping` — Cek respon bot
-- `.runtime` — Lama bot berjalan
-- `.sc` — Lihat source code bot
-- `.play <judul/link>` — Download MP3 dari YouTube (yt-search + yt-dlp)
-- `.ytmp3 <link>` 
-- `.ytmp4  <link>`  
-- `.tiktokdl <link>` — Download video TikTok no watermark
-- `.brat` — ✅ Fitur eksperimen (aktif & jalan)
-- `.sticker` — Ubah media jadi stiker
-- `.toimg` — Ubah stiker jadi foto (jika support)
-- `.welcome` — Sambutan otomatis saat member join
-- `.tagall` — Mention semua member (admin only)
-- `.hidetag` — Kirim pesan tersembunyi tag semua (admin only)
+Berikut adalah daftar perintah yang tersedia di bot:
+
+🔧 Umum
+
+.menu — Tampilkan daftar fitur
+
+.owner — Info kontak owner bot
+
+.ping — Cek respon bot
+
+.runtime — Lama bot berjalan
+
+.sc — Lihat source code bot
+
+
+🎵 Musik & Download
+
+.play <judul/link> — Download MP3 dari YouTube (yt-search + yt-dlp)
+
+.ytmp3 <link> — Download audio dari YouTube
+
+.ytmp4 <link> — Download video dari YouTube
+
+.tiktokdl <link> — Download video TikTok no watermark
+
+.instagram <link> — Download video/foto dari Instagram
+
+
+🧪 Eksperimen
+
+.brat — ✅ Fitur eksperimen (aktif & jalan)
+
+
+🖼️ Media & Stiker
+
+.sticker — Ubah media jadi stiker
+
+.toimg — Ubah stiker jadi foto (jika support)
+
+
+👥 Grup Tools (admin only)
+
+.welcome — Sambutan otomatis saat member join grup
+
+.tagall — Mention semua member
+
+.hidetag — Kirim pesan tersembunyi ke semua member
+
+.kick @user — Keluarkan anggota dari grup
+
+.add <nomor> — Tambahkan anggota ke grup
+
+.promote @user — Jadikan admin
+
+.demote @user — Turunkan jadi member
+
+.leave — Bot keluar dari grup
+
+
+
 ---
 
 ## ⚙️ Instalasi (Termux / Linux)
