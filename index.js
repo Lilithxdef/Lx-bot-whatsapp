@@ -25,7 +25,6 @@ const bratifyMedia = require('./lib/brat')
 const tiktokdl = require('./lib/tiktokdl')
 const tagAll = require('./lib/tagall')
 const { handleWelcomeCommand, handleWelcomeEvent } = require('./lib/welcome')
-//const groupCmd = require('./lib/group')
 
 async function startSock() {
   const { state, saveCreds } = await useMultiFileAuthState('./session')
@@ -37,13 +36,10 @@ async function startSock() {
   browser: ['Ubuntu', 'Firefox', '120.0.0']
 })
 
-// Update kredensial saat terjadi perubahan
 sock.ev.on('creds.update', saveCreds)
 
-// ⬇️ PASANG di sini: Aktifkan fitur welcome
 handleWelcomeEvent(sock)
 
-// Tangani koneksi (QR code, reconnect, status)
 sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
   if (qr) {
     console.log('📲 Scan QR berikut:')
