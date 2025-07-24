@@ -12,7 +12,6 @@ const fetch = require('node-fetch')
 
 // Import fitur
 const googleImg = require('./lib/img')
-const execShell = require('./lib/exec')
 const antiView = require('./lib/antiview')
 const owner = require('./lib/owner')
 const handleAutoResponse = require('./lib/autoresponse')
@@ -22,7 +21,6 @@ const ytmp4 = require('./lib/ytmp4')
 const ytmp3 = require('./lib/ytmp3')
 const sticker = require('./lib/sticker')
 const toimg = require('./lib/toimg')
-const ai = require('./lib/ai')
 const bratifyMedia = require('./lib/brat')
 const tiktokdl = require('./lib/tiktokdl')
 const tagAll = require('./lib/tagall')
@@ -122,8 +120,6 @@ ${menuText}
 } else if (command === '.play') {
   if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan judul atau link YouTube.' }, { quoted: msg })
   await play(sock, msg, args.join(' '))
-} else if (command === '.hidetag') {
-  await hidetag(sock, msg,args)
 } else if (command === '.tagall') {
   await tagAll(sock, msg, args)
 } else if (command === '.ytmp4') {
@@ -139,9 +135,6 @@ ${menuText}
   await tiktokdl(sock, msg, args[0])
 } else if (command === '.sticker' || command === '.stker' || command === '.s') {
   await sticker(sock, msg)
-} else if (command === '.ai') {
-  if (!args[0]) return sock.sendMessage(from, { text: '❌ Masukkan pertanyaan!' }, { quoted: msg })
-  await ai(sock, msg, args.join(' '))
 } else if (command === '.ping') {
   const now = new Date().getTime()
   const latency = now - msg.messageTimestamp * 1000
@@ -152,8 +145,6 @@ ${menuText}
   await googleImg(sock, msg, q)
 } else if (command === '.toimg') {
   await toimg(sock, msg)
-} else if (command === '.ytsearch') {
-  await ytSearch(sock, msg)
 } else if (command === '.brat') {
   await bratifyMedia(sock, msg, args.join(' '))
 } else if (command === '.ban' || command === '.unban') {
@@ -188,14 +179,8 @@ ${menuText}
 `.trim()
 
   await sock.sendMessage(from, { text: info }, { quoted: msg })
-} else if (command === '.brat') {
-  await bratifyMedia(sock, msg, args.join(' '))
 } else if (command === '.q') {
   await antiView(sock, msg)
-} else if (command === '.exec') {
-  execShell(sock, msg, text, isOwner)
-} else if (command === '.listban') {
-  await listBanHandler(sock, msg)
 } else if (command === '.sc') {
         await sock.sendMessage(from, {
           text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
