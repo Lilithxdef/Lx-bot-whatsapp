@@ -31,30 +31,34 @@ async function startSock() {
   const { state, saveCreds } = await useMultiFileAuthState('./session')
 
   const sock = makeWASocket({
-    version: await fetchLatestBaileysVersion().then(res => res.version),
-    auth: state,
-    logger: P({ level: 'silent' }),
-    browser: ['Ubuntu', 'Firefox', '120.0.0']
-  })
+  version: await fetchLatestBaileysVersion().then(res => res.version),
+  auth: state,
+  logger: P({ level: 'silent' }),
+  browser: ['Ubuntu', 'Firefox', '120.0.0']
+})
 
-  sock.ev.on('creds.update', saveCreds)
+// Update kredensial saat terjadi perubahan
+sock.ev.on('creds.update', saveCreds)
 
-  sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
-    if (qr) {
-      console.log('📲 Scan QR berikut:')
-      qrcode.generate(qr, { small: true })
-    }
+// ⬇️ PASANG di sini: Aktifkan fitur welcome
+handleWelcomeEvent(sock)
 
-    if (connection === 'close') {
-      console.log('❌ Koneksi terputus.')
-      console.log('📛 Detail error:', lastDisconnect?.error)
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
-      if (shouldReconnect) startSock()
-    } else if (connection === 'open') {
-      console.log('✅ Bot siap! Terhubung sebagai:', sock.user.id)
-    }
+// Tangani koneksi (QR code, reconnect, status)
+sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
+  if (qr) {
+    console.log('📲 Scan QR berikut:')
+    qrcode.generate(qr, { small: true })
+  }
 
-  })
+  if (connection === 'close') {
+    console.log('❌ Koneksi terputus.')
+    console.log('📛 Detail error:', lastDisconnect?.error)
+    const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
+    if (shouldReconnect) startSock()
+  } else if (connection === 'open') {
+    console.log('✅ Bot siap! Terhubung sebagai:', sock.user.id)
+  }
+})
 sock.ev.on('messages.upsert', async ({ messages }) => {
   const msg = messages[0]
   if (!msg.message || !msg.key || !msg.key.remoteJid) return
