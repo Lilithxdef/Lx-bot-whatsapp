@@ -89,7 +89,7 @@ if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
 }
 
 // Auto Response hanya untuk pesan biasa (non-command)
-if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
+//if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
 
     if (isCmd) {
 if (command === '.menu') {
