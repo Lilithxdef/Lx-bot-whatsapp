@@ -10,6 +10,7 @@ const fs = require('fs')
 const qrcode = require('qrcode-terminal')
 const fetch = require('node-fetch')
 
+const hidetag = require('./lib/hidetag')
 const googleImg = require('./lib/img')
 const antiView = require('./lib/antiview')
 const owner = require('./lib/owner')
@@ -18,6 +19,7 @@ const menu = require('./lib/menu')
 const { instaYTDLP } = require('./lib/instagram')
 const play = require('./lib/play')
 const ytmp4 = require('./lib/ytmp4')
+const absen = require('./lib/absen')
 const ytmp3 = require('./lib/ytmp3')
 const sticker = require('./lib/sticker')
 const toimg = require('./lib/toimg')
@@ -36,7 +38,25 @@ async function startSock() {
   version: await fetchLatestBaileysVersion().then(res => res.version),
   auth: state,
   logger: P({ level: 'silent' }),
-  browser: ['Ubuntu', 'Firefox', '120.0.0']
+  browser: ['Ubuntu', 'Firefox', '120.0.0'],
+  patchMessageBeforeSending: (message) => {
+   const needsPatch = !!(
+     message.buttonsMessage ||
+     message.templateButtons ||
+     message.listMessage
+   )
+   if (needsPatch) {
+     message = {
+       viewOnceMessage: {
+         message: {
+           messageContextInfo: {},
+           ...message
+         }
+       }
+     }
+   }
+   return message
+ }
 })
 
 sock.ev.on('creds.update', saveCreds)
@@ -89,7 +109,7 @@ if (!from.endsWith('@s.whatsapp.net') && !from.endsWith('@g.us')) {
 }
 
 // Auto Response hanya untuk pesan biasa (non-command)
-//if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
+if (!isCmd) await handleAutoResponse(sock, msg, from, isCmd)
 
     if (isCmd) {
 if (command === '.menu') {
@@ -145,8 +165,12 @@ ${menuText}
   await sock.sendMessage(from, { text: `🏓 *Pong!*\n📶 Respon: *${latency} ms*` }, { quoted: msg })
 } else if (command === '.insta') {
   await require('./lib/instagram')(sock, msg, args)
+} else if (command === '.hidetag') {
+  await hidetag(sock, msg, args)
 } else if (command === '.tagall') {
   await tagAll(sock, msg, from, sender, groupMetadata, args)
+} else if (command === '.absen') {
+  await absen(sock, msg, args)
 } else if (command === '.img') {
   await googleImg(sock, msg, q)
 } else if (command === '.Rk') {
@@ -184,7 +208,7 @@ ${menuText}
   await antiView(sock, msg)
 } else if (command === '.sc') {
         await sock.sendMessage(from, {
-          text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
+          text: `📦 *Source Code Lx-bot*\n\n📁 GitHub:\nhttps://github.com/lilithxdef/Lx-bot-whatsapp\n\n🧠 Dibuat oleh *LilithXdef* menggunakan *Baileys*.\n📌 Jangan lupa kasih star kalau suka ya ⭐`
         }, { quoted: msg })
 } else if (command === '.owner') {
   await owner(sock, msg)
