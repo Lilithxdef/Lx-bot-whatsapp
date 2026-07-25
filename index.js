@@ -139,7 +139,7 @@ sock.ev.on('messages.upsert', async ({ messages, type }) => {
   }
 
 // Auto Response hanya untuk pesan biasa (non-command) (hapus tanda // dibawah ini sebelum if untuk mengaktifkan)
- await handleAutoResponse(sock, msg, from, isCmd)
+ //await handleAutoResponse(sock, msg, from, isCmd)
 if (isCmd) {
 if (command === 'menu') {
   const from = msg.key.remoteJid
